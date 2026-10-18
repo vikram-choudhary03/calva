@@ -146,5 +146,50 @@ describe('text-notation test utils', () => {
         expectLib.expect(textNotation.textAndSelections(doc)).toEqual([text, selections]);
       });
     });
+    describe('CRLF line endings', () => {
+      it('returns document text containing the same CRLF line endings as the input', () => {
+        const tn = '(foo\r\nbar|)';
+        const doc = textNotation.docFromTextNotation(tn);
+        expectLib.expect(textNotation.getText(doc)).toBe('(foo\r\nbar)');
+      });
+      it('resolves cursor and selection positions to the same logical positions as the equivalent LF input', () => {
+        const crlfCursorTn = '(foo\r\n|bar)';
+        const lfCursorTn = '(foo\n|bar)';
+        const crlfCursorDoc = textNotation.docFromTextNotation(crlfCursorTn);
+        const lfCursorDoc = textNotation.docFromTextNotation(lfCursorTn);
+        const [, [crlfCursorAnchor, crlfCursorActive]] =
+          textNotation.textAndSelection(crlfCursorDoc);
+        const [, [lfCursorAnchor, lfCursorActive]] = textNotation.textAndSelection(lfCursorDoc);
+        expectLib.expect(crlfCursorDoc.model.getRowCol(crlfCursorAnchor)).toEqual(
+          lfCursorDoc.model.getRowCol(lfCursorAnchor)
+        );
+        expectLib.expect(crlfCursorDoc.model.getRowCol(crlfCursorActive)).toEqual(
+          lfCursorDoc.model.getRowCol(lfCursorActive)
+        );
+
+        const crlfSelectionTn = '(foo\r\n|bar|)';
+        const lfSelectionTn = '(foo\n|bar|)';
+        const crlfSelectionDoc = textNotation.docFromTextNotation(crlfSelectionTn);
+        const lfSelectionDoc = textNotation.docFromTextNotation(lfSelectionTn);
+        const [, [crlfSelectionAnchor, crlfSelectionActive]] =
+          textNotation.textAndSelection(crlfSelectionDoc);
+        const [, [lfSelectionAnchor, lfSelectionActive]] =
+          textNotation.textAndSelection(lfSelectionDoc);
+        expectLib.expect(crlfSelectionDoc.model.getRowCol(crlfSelectionAnchor)).toEqual(
+          lfSelectionDoc.model.getRowCol(lfSelectionAnchor)
+        );
+        expectLib.expect(crlfSelectionDoc.model.getRowCol(crlfSelectionActive)).toEqual(
+          lfSelectionDoc.model.getRowCol(lfSelectionActive)
+        );
+      });
+      it('does not convert CRLF to LF', () => {
+        const tn = '(foo\r\nbar\r\nbaz|)';
+        const doc = textNotation.docFromTextNotation(tn);
+        const text = textNotation.getText(doc);
+        expectLib.expect(text).toBe('(foo\r\nbar\r\nbaz)');
+        expectLib.expect(text.match(/\n/g)?.length).toBe(2);
+        expectLib.expect(text.match(/\r\n/g)?.length).toBe(2);
+      });
+    });
   });
 });
