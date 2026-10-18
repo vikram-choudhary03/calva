@@ -87,4 +87,27 @@ describe('string', () => {
         .toBe(string.getTextAfterLastOccurrenceOfSubstring('hello > world >\n\t foo \n\t', '>'));
     });
   });
+
+  describe('getTextBeforeFirstOccurrenceOfSubstring', () => {
+    it('returns text before first occurrence of substring', () => {
+      expectLib
+        .expect('foo')
+        .toBe(string.getTextBeforeFirstOccurrenceOfSubstring('foo/bar/baz', '/'));
+    });
+    it('returns text if substring does not exist', () => {
+      expectLib
+        .expect(string.getTextBeforeFirstOccurrenceOfSubstring('hello world', '123'))
+        .toBe('hello world');
+    });
+    it('returns empty string if substring appears at index 0', () => {
+      expectLib
+        .expect('')
+        .toBe(string.getTextBeforeFirstOccurrenceOfSubstring('/foo', '/'));
+    });
+    it('returns text before first occurrence of substring without trimming whitespace or eol characters', () => {
+      expectLib
+        .expect('hello \n\t ')
+        .toBe(string.getTextBeforeFirstOccurrenceOfSubstring('hello \n\t > world >\n\t foo \n\t', '>'));
+    });
+  });
 });
