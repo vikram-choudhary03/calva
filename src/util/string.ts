@@ -36,6 +36,13 @@ function getTextAfterLastOccurrenceOfSubstring(
   return text.substring(indexOfEndOfPrompt);
 }
 
+/**
+ * Returns the text before the first occurrence of `substring`.
+ * Returns the whole text unchanged when `substring` is absent.
+ * @param  {string} text
+ * @param  {string} substring
+ * @return {string} text before the first occurrence of `substring`, without trimming
+ */
 function getTextBeforeFirstOccurrenceOfSubstring(
   text: string,
   substring: string
