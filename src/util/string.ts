@@ -36,6 +36,17 @@ function getTextAfterLastOccurrenceOfSubstring(
   return text.substring(indexOfEndOfPrompt);
 }
 
+function getTextBeforeFirstOccurrenceOfSubstring(
+  text: string,
+  substring: string
+): string | undefined {
+  const indexOfFirst = text.indexOf(substring);
+  if (indexOfFirst === -1) {
+    return text;
+  }
+  return text.substring(0, indexOfFirst);
+}
+
 export function escapeStringRegexp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -64,4 +75,5 @@ export {
   unKeywordize,
   getIndexAfterLastNonWhitespace,
   getTextAfterLastOccurrenceOfSubstring,
+  getTextBeforeFirstOccurrenceOfSubstring,
 };
